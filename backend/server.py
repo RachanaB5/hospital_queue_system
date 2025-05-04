@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from backend.queue_logic import TriageQueue, Patient
-from backend.flask_cors import CORS
+from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
