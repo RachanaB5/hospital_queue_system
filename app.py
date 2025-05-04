@@ -3,7 +3,7 @@ import requests
 
 st.title("🏥 Hospital Triage Queue Management")
 
-backend_url = "https://hospital-queue-system.onrender.com
+backend_url = "https://hospital-queue-system.onrender.com"
 
 # Add patient form
 with st.form("add_patient_form"):
