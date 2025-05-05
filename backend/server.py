@@ -1,13 +1,14 @@
+# backend.py
 from flask import Flask, request, jsonify
-from backend.queue_logic import TriageQueue, Patient
+from queue_logic import TriageQueue, Patient
 from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
 
 triage = TriageQueue()
+history_log = []
 
-# ✅ Add a simple home route to avoid 404 on base URL
 @app.route('/')
 def home():
     return "🚑 Hospital Queue Management API is running."
@@ -23,6 +24,7 @@ def add_patient():
 def next_patient():
     patient = triage.get_next_patient()
     if patient:
+        history_log.append(vars(patient))
         return jsonify(vars(patient))
     else:
         return jsonify({"message": "No patients in queue"}), 404
@@ -30,6 +32,10 @@ def next_patient():
 @app.route('/view_queue', methods=['GET'])
 def view_queue():
     return jsonify([vars(p) for p in triage.view_queue()])
+
+@app.route('/history', methods=['GET'])
+def history():
+    return jsonify(history_log)
 
 if __name__ == '__main__':
     app.run(debug=True)
