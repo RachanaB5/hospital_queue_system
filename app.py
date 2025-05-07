@@ -1,6 +1,6 @@
 import streamlit as st
 import requests
-import datetime
+from datetime import datetime
 import pandas as pd
 import time
 import pytz
@@ -8,19 +8,18 @@ import pytz
 st.set_page_config(page_title="Hospital Triage System", layout="wide")
 st.title("🏥 Hospital Triage Queue Management")
 
-backend_url = "http://localhost:5001"  # Change this to your deployed backend URL when needed
+backend_url = "https://hospital-queue-system.onrender.com"  # Change this to your deployed backend URL when needed
 
 # Helper function to generate consistent timestamps
 def get_utc_timestamp():
     """Generate a UTC timestamp in a consistent format"""
-    return datetime.datetime.now(pytz.UTC).strftime("%Y-%m-%d %H:%M:%S")
+    return datetime.now(pytz.utc).strftime("%Y-%m-%d %H:%M:%S")
 
-# Helper function to format display timestamp (just time component)
 def format_display_time(timestamp_str):
-    """Extract and format just the time component for display"""
     try:
-        if timestamp_str and len(timestamp_str.split()) > 1:
-            return timestamp_str.split()[1]  # Extract time part
+        dt = datetime.strptime(timestamp_str, "%Y-%m-%d %H:%M:%S")
+        return dt.strftime("%H:%M:%S")
+    except:
         return timestamp_str
     except:
         return timestamp_str  # Return original if parsing fails
@@ -239,9 +238,9 @@ with st.form("add_patient_form"):
             [1, 2, 3],
             format_func=lambda x: {1: "🚨 Critical (1)", 2: "⚠️ Serious (2)", 3: "✅ Stable (3)"}[x]
         )
-        current_time = datetime.datetime.now(pytz.UTC)
-        arrival_time = current_time.strftime("%Y-%m-%d %H:%M:%S")
-        arrival_time_display = current_time.strftime("%H:%M:%S")
+current_time = datetime.datetime.utcnow()  # Use UTC consistently
+arrival_time = current_time.strftime("%Y-%m-%d %H:%M:%S")
+arrival_time_display = current_time.strftime("%H:%M:%S")
         st.markdown(f"""
             <div style="margin-top: 10px;">
                 <div style="font-size: 0.9em; color: #64748b;">Arrival Time:</div>
