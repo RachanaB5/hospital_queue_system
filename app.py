@@ -7,7 +7,7 @@ import time
 st.set_page_config(page_title="Hospital Triage System", layout="wide")
 st.title("🏥 Hospital Triage Queue Management")
 
-backend_url = "http://localhost:5002"
+backend_url = "https://hospital-queue-system.onrender.com"
 
 # ─────────────────────────────────────────────
 # Enhanced Custom CSS Styling
