@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
-from queue_logic import TriageQueue, Patient
-from flask_cors import CORS
+from backend.queue_logic import TriageQueue, Patient
+from backend.flask_cors import CORS
 import datetime
 import logging
 import pytz
