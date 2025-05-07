@@ -20,8 +20,6 @@ def format_display_time(timestamp_str):
         dt = datetime.strptime(timestamp_str, "%Y-%m-%d %H:%M:%S")
         return dt.strftime("%H:%M:%S")
     except:
-        return timestamp_str
-    except:
         return timestamp_str  # Return original if parsing fails
 
 # ─────────────────────────────────────────────
@@ -157,7 +155,7 @@ def calculate_wait_time(patient, queue):
 
 def get_current_time():
     """Get current time in HH:MM:SS format"""
-    return datetime.datetime.now().strftime("%H:%M:%S")
+    return datetime.now().strftime("%H:%M:%S")
 
 # ─────────────────────────────────────────────
 # Sidebar – App Info & Patient History
@@ -200,7 +198,7 @@ with st.sidebar:
                 st.download_button(
                     "⬇️ Download Patient Report (CSV)", 
                     df.to_csv(index=False).encode(), 
-                    file_name=f"patient_report_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+                    file_name=f"patient_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
                 )
             else:
                 st.info("No patient data to generate report.")
@@ -238,9 +236,9 @@ with st.form("add_patient_form"):
             [1, 2, 3],
             format_func=lambda x: {1: "🚨 Critical (1)", 2: "⚠️ Serious (2)", 3: "✅ Stable (3)"}[x]
         )
-current_time = datetime.datetime.utcnow()  # Use UTC consistently
-arrival_time = current_time.strftime("%Y-%m-%d %H:%M:%S")
-arrival_time_display = current_time.strftime("%H:%M:%S")
+        current_time = datetime.utcnow()  # Use UTC consistently
+        arrival_time = current_time.strftime("%Y-%m-%d %H:%M:%S")
+        arrival_time_display = current_time.strftime("%H:%M:%S")
         st.markdown(f"""
             <div style="margin-top: 10px;">
                 <div style="font-size: 0.9em; color: #64748b;">Arrival Time:</div>
