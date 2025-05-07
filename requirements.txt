@@ -1,4 +1,4 @@
-flask
+flask>=2.0.0
 werkzeug>=2.0.0,<2.1.0
 flask-cors==3.0.10
 pytz==2021.1
