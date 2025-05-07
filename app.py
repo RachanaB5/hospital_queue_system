@@ -3,11 +3,27 @@ import requests
 import datetime
 import pandas as pd
 import time
+import pytz
 
 st.set_page_config(page_title="Hospital Triage System", layout="wide")
 st.title("🏥 Hospital Triage Queue Management")
 
-backend_url = "https://hospital-queue-system.onrender.com"
+backend_url = "http://localhost:5001"  # Change this to your deployed backend URL when needed
+
+# Helper function to generate consistent timestamps
+def get_utc_timestamp():
+    """Generate a UTC timestamp in a consistent format"""
+    return datetime.datetime.now(pytz.UTC).strftime("%Y-%m-%d %H:%M:%S")
+
+# Helper function to format display timestamp (just time component)
+def format_display_time(timestamp_str):
+    """Extract and format just the time component for display"""
+    try:
+        if timestamp_str and len(timestamp_str.split()) > 1:
+            return timestamp_str.split()[1]  # Extract time part
+        return timestamp_str
+    except:
+        return timestamp_str  # Return original if parsing fails
 
 # ─────────────────────────────────────────────
 # Enhanced Custom CSS Styling
@@ -200,7 +216,7 @@ with st.sidebar:
                         <div style="font-weight: bold;">{p['name']}</div>
                         <div style="font-size: 0.85em; opacity: 0.9;">{p['condition']}</div>
                         <span class="severity-badge severity-{p['severity']}">Severity {p['severity']}</span>
-                        <div class="timestamp">Arrived: {p.get('arrival_time', 'N/A')}</div>
+                        <div class="timestamp">Arrived: {format_display_time(p.get('arrival_time', 'N/A'))}</div>
                     </div>
                 """, unsafe_allow_html=True)
         else:
@@ -223,11 +239,13 @@ with st.form("add_patient_form"):
             [1, 2, 3],
             format_func=lambda x: {1: "🚨 Critical (1)", 2: "⚠️ Serious (2)", 3: "✅ Stable (3)"}[x]
         )
-        arrival_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        current_time = datetime.datetime.now(pytz.UTC)
+        arrival_time = current_time.strftime("%Y-%m-%d %H:%M:%S")
+        arrival_time_display = current_time.strftime("%H:%M:%S")
         st.markdown(f"""
             <div style="margin-top: 10px;">
                 <div style="font-size: 0.9em; color: #64748b;">Arrival Time:</div>
-                <div style="font-weight: bold;">{arrival_time}</div>
+                <div style="font-weight: bold;">{arrival_time_display}</div>
             </div>
         """, unsafe_allow_html=True)
 
@@ -279,7 +297,7 @@ if queue:
                     </div>
                     <div style="margin-top: 8px; display: flex; justify-content: space-between; align-items: center;">
                         <div style="font-size: 0.8em; color: #64748b;">
-                            Arrived: {p.get('arrival_time', 'N/A')}
+                            Arrived: {format_display_time(p.get('arrival_time', 'N/A'))}
                         </div>
                         <div class="wait-time">
                             Estimated wait: ~{wait_time} minutes
@@ -315,7 +333,7 @@ with col2:
                     <h2>{next_p['name']}</h2>
                     <p>{next_p['condition']} • Severity: {next_p['severity']}</p>
                     <div style="font-size: 0.9em; margin-top: 10px;">
-                        Arrived at: {next_p.get('arrival_time', 'N/A')}
+                        Arrived at: {format_display_time(next_p.get('arrival_time', 'N/A'))}
                     </div>
                     <div style="font-size: 0.9em; margin-top: 5px;">
                         Called at: {get_current_time()}
