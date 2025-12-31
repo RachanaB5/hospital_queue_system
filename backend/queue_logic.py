@@ -26,3 +26,4 @@ class TriageQueue:
 
     def view_queue(self):
         return list(self.heap)
+
